@@ -579,6 +579,7 @@ export async function getStatus(): Promise<DeviceStatus> {
 	// After this, for true multi-app, we will need to report our status back in a
 	// different way, meaning this function will no longer be needed
 	const appIds = Object.keys(theState.local!.apps).map((strId) =>
+		// TODO: this doesn't work with app UUIDS
 		parseInt(strId, 10),
 	);
 

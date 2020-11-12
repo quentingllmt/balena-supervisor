@@ -849,6 +849,9 @@ export class App {
 						serviceName: svc.serviceName,
 					};
 
+					// TODO: modify target state with new uuid and releaseVersion labels so
+					// a container restart is triggered
+
 					// FIXME: Typings for DeviceMetadata
 					return await Service.fromComposeObject(
 						svc,

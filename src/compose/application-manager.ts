@@ -20,11 +20,11 @@ import App from './app';
 import * as volumeManager from './volume-manager';
 import * as networkManager from './network-manager';
 import * as serviceManager from './service-manager';
+import * as overlayManager from './overlay-manager';
 import * as imageManager from './images';
 import type { Image } from './images';
 import { getExecutors, CompositionStepT } from './composition-steps';
 import * as commitStore from './commit';
-
 import Service from './service';
 
 import { createV1Api } from '../device-api/v1';
@@ -42,6 +42,7 @@ import * as updateLock from '../lib/update-lock';
 import { EventEmitter } from 'events';
 import Network from './network';
 import Volume from './volume';
+import Overlay from './overlay';
 
 type ApplicationManagerEventEmitter = StrictEventEmitter<
 	EventEmitter,
@@ -193,12 +194,14 @@ export async function getRequiredSteps(
 		imageManager.getAvailable(),
 		getCurrentApps(),
 	]);
+
 	const containerIdsByAppId = await getAppContainerIds(currentApps);
 
 	if (localMode) {
 		ignoreImages = localMode;
 	}
 
+	// targetApps = _.pickBy(targetApps, { type: 'supervised' });
 	const currentAppIds = Object.keys(currentApps).map((i) => parseInt(i, 10));
 	const targetAppIds = Object.keys(targetApps).map((i) => parseInt(i, 10));
 
@@ -276,6 +279,7 @@ export async function getRequiredSteps(
 						appId,
 						uuid,
 						services: [],
+						overlays: [],
 						volumes: {},
 						networks: {},
 					},
@@ -381,6 +385,7 @@ export async function getCurrentApps(): Promise<InstancedAppState> {
 		await serviceManager.getAll(),
 		await networkManager.getAll(),
 		await volumeManager.getAll(),
+		await overlayManager.getAll(),
 	);
 
 	const apps: InstancedAppState = {};
@@ -408,12 +413,16 @@ export async function getCurrentApps(): Promise<InstancedAppState> {
 			!_.isEmpty(components.volumes) ||
 			!_.isEmpty(components.networks)
 		) {
+			const services = componentGroups[appId].services;
+			const overlays = componentGroups[appId].overlays;
+
 			apps[appId] = new App(
 				{
 					appId,
 					uuid,
 					commit,
-					services: componentGroups[appId].services,
+					services,
+					overlays,
 					networks: _.keyBy(componentGroups[appId].networks, 'name'),
 					volumes: _.keyBy(componentGroups[appId].volumes, 'name'),
 				},
@@ -430,6 +439,7 @@ interface AppGroup {
 		services: Service[];
 		volumes: Volume[];
 		networks: Network[];
+		overlays: Overlay[];
 	};
 }
 
@@ -437,6 +447,7 @@ function groupComponents(
 	services: Service[],
 	networks: Network[],
 	volumes: Volume[],
+	overlays: Overlay[],
 ): AppGroup {
 	const grouping: AppGroup = {};
 
@@ -444,6 +455,7 @@ function groupComponents(
 		...services,
 		...networks,
 		...volumes,
+		...overlays,
 	] as any;
 
 	const allUuids: string[] = [];
@@ -454,6 +466,7 @@ function groupComponents(
 			services: [],
 			networks: [],
 			volumes: [],
+			overlays: [],
 		};
 		// Save all the uuids for later
 		if (uuid != null) {
@@ -470,11 +483,13 @@ function groupComponents(
 			const uuidServices = services.filter(({ uuid: sUuid }) => uuid === sUuid);
 			const uuidVolumes = volumes.filter(({ uuid: vUuid }) => uuid === vUuid);
 			const uuidNetworks = networks.filter(({ uuid: nUuid }) => uuid === nUuid);
+			const uuidOverlays = overlays.filter(({ uuid: nUuid }) => uuid === nUuid);
 
 			uuidGroups[uuid] = {
 				services: uuidServices,
 				networks: uuidNetworks,
 				volumes: uuidVolumes,
+				overlays: uuidOverlays,
 			};
 		});
 
@@ -485,6 +500,7 @@ function groupComponents(
 			// backend) so we instead just choose the first and add everything to that
 			const appId =
 				uuidGroups[uuid].services[0]?.appId ||
+				uuidGroups[uuid].overlays[0]?.appId ||
 				uuidGroups[uuid].networks[0]?.appId ||
 				uuidGroups[uuid].volumes[0]?.appId;
 			grouping[appId] = uuidGroups[uuid];
@@ -496,6 +512,7 @@ function groupComponents(
 		const appSvcs = _.groupBy(services, 'appId');
 		const appVols = _.groupBy(volumes, 'appId');
 		const appNets = _.groupBy(networks, 'appId');
+		const appOvls = _.groupBy(overlays, 'appId');
 
 		_.uniq(allAppIds).forEach((appId) => {
 			grouping[appId].services = grouping[appId].services.concat(
@@ -506,6 +523,9 @@ function groupComponents(
 			);
 			grouping[appId].volumes = grouping[appId].volumes.concat(
 				appVols[appId] || [],
+			);
+			grouping[appId].overlays = grouping[appId].overlays.concat(
+				appOvls[appId] || [],
 			);
 		});
 	}
@@ -778,6 +798,7 @@ function saveAndRemoveImages(
 				}) ?? _.find(availableImages, { dockerImageId: svc.config.image }),
 		),
 	) as imageManager.Image[];
+
 	const targetImages = _.flatMap(target, (app) =>
 		_.map(app.services, imageForService),
 	);

@@ -1,4 +1,30 @@
 - commits:
+    - subject: Remove rsync delta (v2) support
+      hash: 51357f29c11827d25f033701385485a557498e9b
+      body: >
+        Remove resumable-request, docker-delta dependencies. Docker-delta is
+        only used for v2 rsync deltas
+
+        and is not needed for v3. resumable-request is not used elsewhere
+        either. Keep isV2DeltaImage function,
+
+        since local images after OS 3 update might still be of the old type, so
+        we need to continue to handle
+
+        rsync deltas until all devices on platform have successfully migrated to
+        OS 3.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Connects-to: '#1602'
+        connects-to: '#1602'
+        Signed-off-by: Christina Wang <christina@balena.io>
+        signed-off-by: Christina Wang <christina@balena.io>
+      author: Christina Wang
+      nested: []
+  version: 12.5.0
+  date: 2021-03-30T05:23:02.793Z
+- commits:
     - subject: Enable strict options by default and only disable specific ones
       hash: 2ae22b4fbd36090e65d943ebe7e5a623d6286b8f
       body: ''

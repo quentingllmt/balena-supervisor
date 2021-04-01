@@ -1,4 +1,17 @@
 - commits:
+    - subject: Default delta version to be 3
+      hash: 6ca1a62f5883852b2cdb2d38503c0288d85526df
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Miguel Casqueira <miguel@balena.io>
+        signed-off-by: Miguel Casqueira <miguel@balena.io>
+      author: Miguel Casqueira
+      nested: []
+  version: 12.5.4
+  date: 2021-04-01T21:28:22.490Z
+- commits:
     - subject: Bump y18n from 4.0.0 to 4.0.1
       hash: 9dd508b94d1bcf93801c698ee1286fd217b9d366
       body: |

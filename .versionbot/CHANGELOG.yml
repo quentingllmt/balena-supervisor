@@ -1,4 +1,21 @@
 - commits:
+    - subject: >-
+        Add a log message for cases where deltas become unavailable with Docker
+        daemon 404 while applying
+      hash: c0f256b5b12d0c38d44a173b34743aac012030cb
+      body: ''
+      footer:
+        Connects-to: '#1295'
+        connects-to: '#1295'
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Christina Wang <christina@balena.io>
+        signed-off-by: Christina Wang <christina@balena.io>
+      author: Christina Wang
+      nested: []
+  version: 12.5.8
+  date: 2021-04-07T04:38:45.402Z
+- commits:
     - subject: Add message to refer to v2 endpoints
       hash: 732950fb9e106bf0d28d9cbb84c73c80d60e533e
       body: ''

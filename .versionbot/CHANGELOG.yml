@@ -1,4 +1,19 @@
 - commits:
+    - subject: Convert device-api/common.js to TypeScript
+      hash: 31495ffeb6d5ea60f94fcbb657ddc2fe6fcf64f0
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Closes: '#1650'
+        closes: '#1650'
+        Signed-off-by: Christina Wang <christina@balena.io>
+        signed-off-by: Christina Wang <christina@balena.io>
+      author: Christina Wang
+      nested: []
+  version: 12.5.11
+  date: 2021-04-13T14:09:13.945Z
+- commits:
     - subject: 'patch: Fix the sysInfo.getCpuId() test'
       hash: 50a2f3d313d8883c077aea7e57188b1354942edd
       body: ''

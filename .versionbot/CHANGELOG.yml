@@ -1,4 +1,21 @@
 - commits:
+    - subject: Change 'require' to 'import * from' for dependencies
+      hash: cb920a71186a7e9f1eec4a37a515af4561198950
+      body: |
+        This refactors imports for all typescript compatible modules from
+        `require`, to `import * from`. This change has no effect in code
+        execution, it's only about code consistency.
+
+        This has the added benefit of allowing us to identify all non-typescript
+        external modules and look for possible alternatives.
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Felipe Lalanne
+      nested: []
+  version: 12.5.11
+  date: 2021-04-19T13:43:55.759Z
+- commits:
     - subject: 'patch: Fix the sysInfo.getCpuId() test'
       hash: 50a2f3d313d8883c077aea7e57188b1354942edd
       body: ''

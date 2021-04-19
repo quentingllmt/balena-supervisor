@@ -1,16 +1,20 @@
 - commits:
-    - subject: Refactor extra_uEnv to not match with intel nuc
-      hash: e6eda0fca7b280aa5453972a26c36ab6895c227a
-      body: ''
+    - subject: Change 'require' to 'import * from' for dependencies
+      hash: cb920a71186a7e9f1eec4a37a515af4561198950
+      body: |
+        This refactors imports for all typescript compatible modules from
+        `require`, to `import * from`. This change has no effect in code
+        execution, it's only about code consistency.
+
+        This has the added benefit of allowing us to identify all non-typescript
+        external modules and look for possible alternatives.
       footer:
         Change-type: patch
         change-type: patch
-        Signed-off-by: Miguel Casqueira <miguel@balena.io>
-        signed-off-by: Miguel Casqueira <miguel@balena.io>
-      author: Miguel Casqueira
+      author: Felipe Lalanne
       nested: []
   version: 12.5.11
-  date: 2021-04-14T05:27:23.056Z
+  date: 2021-04-19T13:41:45.261Z
 - commits:
     - subject: 'patch: Fix the sysInfo.getCpuId() test'
       hash: 50a2f3d313d8883c077aea7e57188b1354942edd

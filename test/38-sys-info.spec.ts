@@ -1,7 +1,7 @@
 import { expect } from 'chai';
-import { stub } from 'sinon';
+import { SinonStub, stub } from 'sinon';
 import * as systeminformation from 'systeminformation';
-import { fs } from 'mz';
+import { child_process, fs } from 'mz';
 
 import * as sysInfo from '../src/lib/system-info';
 
@@ -10,16 +10,34 @@ function toMb(bytes: number) {
 }
 
 describe('System information', async () => {
-	const fsSizeStub = stub(systeminformation, 'fsSize');
-	const memStub = stub(systeminformation, 'mem');
-	const currentLoadStub = stub(systeminformation, 'currentLoad');
-	const cpuTempStub = stub(systeminformation, 'cpuTemperature');
+	let fsSizeStub: SinonStub;
+	let memStub: SinonStub;
+	let currentLoadStub: SinonStub;
+	let cpuTempStub: SinonStub;
+	let fsStub: SinonStub;
+	let undervoltStub: SinonStub;
+
+	before(() => {
+		fsSizeStub = stub(systeminformation, 'fsSize');
+		memStub = stub(systeminformation, 'mem').resolves(mockMemory);
+		currentLoadStub = stub(systeminformation, 'currentLoad').resolves(
+			mockCPU.load,
+		);
+		cpuTempStub = stub(systeminformation, 'cpuTemperature').resolves(
+			mockCPU.temp,
+		);
+		// @ts-ignore TS thinks we can't return a buffer...
+		fsStub = stub(fs, 'readFile').resolves(mockCPU.id);
+		undervoltStub = stub(child_process, 'exec');
+	});
 
 	after(() => {
 		fsSizeStub.restore();
 		memStub.restore();
 		currentLoadStub.restore();
 		cpuTempStub.restore();
+		fsStub.restore();
+		undervoltStub.restore();
 	});
 
 	describe('Delta-based filtering', () => {
@@ -78,7 +96,6 @@ describe('System information', async () => {
 
 	describe('CPU information', async () => {
 		it('gets CPU usage', async () => {
-			currentLoadStub.resolves(mockCPU.load);
 			const cpuUsage = await sysInfo.getCpuUsage();
 			// Make sure it is a whole number
 			expect(cpuUsage % 1).to.equal(0);
@@ -87,7 +104,6 @@ describe('System information', async () => {
 		});
 
 		it('gets CPU temp', async () => {
-			cpuTempStub.resolves(mockCPU.temp);
 			const tempInfo = await sysInfo.getCpuTemp();
 			// Make sure it is a whole number
 			expect(tempInfo % 1).to.equal(0);
@@ -96,37 +112,13 @@ describe('System information', async () => {
 		});
 
 		it('gets CPU ID', async () => {
-			const fsStub = stub(fs, 'readFile').resolves(
-				// @ts-ignore TS thinks we can't return a buffer...
-				Buffer.from([
-					0x31,
-					0x30,
-					0x30,
-					0x30,
-					0x30,
-					0x30,
-					0x30,
-					0x30,
-					0x30,
-					0x31,
-					0x62,
-					0x39,
-					0x33,
-					0x66,
-					0x33,
-					0x66,
-					0x00,
-				]),
-			);
 			const cpuId = await sysInfo.getCpuId();
 			expect(cpuId).to.equal('1000000001b93f3f');
-			fsStub.restore();
 		});
 	});
 
 	describe('Memory information', async () => {
 		it('should return the correct value for memory usage', async () => {
-			memStub.resolves(mockMemory);
 			const memoryInfo = await sysInfo.getMemoryInformation();
 			expect(memoryInfo).to.deep.equal({
 				total: toMb(mockMemory.total),
@@ -157,6 +149,40 @@ describe('System information', async () => {
 				blockDevice: '',
 				storageUsed: undefined,
 				storageTotal: undefined,
+			});
+		});
+	});
+
+	describe('Undervoltage', () => {
+		it('should detect undervoltage', async () => {
+			undervoltStub.resolves([
+				Buffer.from('[58611.126996] Under-voltage detected! (0x00050005)'),
+				Buffer.from(''),
+			]);
+			expect(await sysInfo.undervoltageDetected()).to.be.true;
+			undervoltStub.resolves([
+				Buffer.from('[569378.450066] eth0: renamed from veth3aa11ca'),
+				Buffer.from(''),
+			]);
+			expect(await sysInfo.undervoltageDetected()).to.be.false;
+		});
+	});
+
+	describe('System information reporting', () => {
+		it('should return system info based on SUPERVISOR_REPORT_HARDWARE_METRICS config var', async () => {
+			// SUPERVISOR_REPORT_HARDWARE_METRICS config var's value is passed to getSysInfoToReport
+			fsSizeStub.resolves(mockFS);
+			expect(await sysInfo.getSysInfoToReport(false)).to.deep.equal({});
+			expect(await sysInfo.getSysInfoToReport(true)).to.deep.equal({
+				cpu_usage: 1,
+				memory_usage: 580,
+				memory_total: 3845,
+				storage_usage: 1118,
+				storage_total: 29023,
+				storage_block_device: '/dev/mmcblk0p6',
+				cpu_temp: 51,
+				cpu_id: mockCPU.id.toString().slice(0, -1),
+				is_undervolted: false,
 			});
 		});
 	});
@@ -242,6 +268,25 @@ const mockCPU = {
 			},
 		],
 	},
+	id: Buffer.from([
+		0x31,
+		0x30,
+		0x30,
+		0x30,
+		0x30,
+		0x30,
+		0x30,
+		0x30,
+		0x30,
+		0x31,
+		0x62,
+		0x39,
+		0x33,
+		0x66,
+		0x33,
+		0x66,
+		0x00,
+	]),
 };
 const mockFS = [
 	{

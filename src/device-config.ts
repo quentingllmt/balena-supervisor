@@ -191,6 +191,11 @@ const configKeys: Dictionary<ConfigOption> = {
 		varType: 'bool',
 		defaultValue: 'true',
 	},
+	reportHardwareMetrics: {
+		envVarName: 'SUPERVISOR_REPORT_HARDWARE_METRICS',
+		varType: 'bool',
+		defaultValue: 'true',
+	},
 };
 
 export const validKeys = [

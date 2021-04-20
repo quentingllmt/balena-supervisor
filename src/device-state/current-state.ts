@@ -177,7 +177,10 @@ const reportCurrentState = (): null => {
 		reportPending = true;
 		try {
 			const currentDeviceState = await deviceState.getStatus();
-			const info = await sysInfo.getSysInfoToReport();
+			const info = await sysInfo.getSysInfoToReport(
+				await config.get('reportHardwareMetrics'),
+			);
+
 			stateForReport.local = {
 				...stateForReport.local,
 				...currentDeviceState.local,

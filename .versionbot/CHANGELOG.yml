@@ -1,4 +1,22 @@
 - commits:
+    - subject: Add toggleable `SUPERVISOR_REPORT_HARDWARE_METRICS` config
+      hash: cc6083405181b792493c23709fc47a299f4eab9b
+      body: |
+        On devices with bandwidth sensitivity, this config var
+        disables sending system information such as memory
+        usage or cpu temp as current state.
+      footer:
+        Closes: '#1645'
+        closes: '#1645'
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Christina Wang <christina@balena.io>
+        signed-off-by: Christina Wang <christina@balena.io>
+      author: Christina Wang
+      nested: []
+  version: 12.6.0
+  date: 2021-04-20T12:10:21.184Z
+- commits:
     - subject: Refactor extra_uEnv to not match with intel nuc
       hash: e6eda0fca7b280aa5453972a26c36ab6895c227a
       body: ''

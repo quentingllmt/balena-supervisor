@@ -1,4 +1,19 @@
 - commits:
+    - subject: Added configurations.md to document all configurable vars
+      hash: df9b38915aeff8c34463a40834cbab31a440c2e0
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Closes: '#1646'
+        closes: '#1646'
+        Signed-off-by: Miguel Casqueira <miguel@balena.io>
+        signed-off-by: Miguel Casqueira <miguel@balena.io>
+      author: Miguel Casqueira
+      nested: []
+  version: 12.5.12
+  date: 2021-04-20T20:10:47.462Z
+- commits:
     - subject: Refactor extra_uEnv to not match with intel nuc
       hash: e6eda0fca7b280aa5453972a26c36ab6895c227a
       body: ''

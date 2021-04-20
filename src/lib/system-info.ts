@@ -75,7 +75,7 @@ export async function getCpuId(): Promise<string | undefined> {
 	}
 }
 
-const undervoltageRegex = /under.*voltage/;
+const undervoltageRegex = /[U|u]nder.*voltage/;
 export async function undervoltageDetected(): Promise<boolean> {
 	try {
 		const [dmesgStdout] = await child_process.exec('dmesg');
@@ -85,7 +85,13 @@ export async function undervoltageDetected(): Promise<boolean> {
 	}
 }
 
-export async function getSysInfoToReport() {
+export async function getSysInfoToReport(
+	shouldReport: boolean = true,
+): Promise<SystemInfo | {}> {
+	if (!shouldReport) {
+		return {};
+	}
+
 	const [cpu, mem, temp, cpuid, storage, undervoltage] = await Promise.all([
 		getCpuUsage(),
 		getMemoryInformation(),
@@ -108,9 +114,17 @@ export async function getSysInfoToReport() {
 	};
 }
 
-export type SystemInfo = UnwrappedPromise<
-	ReturnType<typeof getSysInfoToReport>
->;
+export type SystemInfo = {
+	cpu_usage: number;
+	memory_usage: number;
+	memory_total: number;
+	storage_usage: number | undefined;
+	storage_total: number | undefined;
+	storage_block_device: string;
+	cpu_temp: number;
+	cpu_id: string | undefined;
+	is_undervolted: boolean;
+};
 
 const significantChange: { [key in keyof SystemInfo]?: number } = {
 	cpu_usage: 20,

@@ -1,20 +1,26 @@
 - commits:
-    - subject: Bump ssri from 6.0.1 to 6.0.2
-      hash: ae8dc8ff227237444ae532cf7e817bfc463fbac5
-      body: |
-        Bumps [ssri](https://github.com/npm/ssri) from 6.0.1 to 6.0.2.
-        - [Release notes](https://github.com/npm/ssri/releases)
-        - [Changelog](https://github.com/npm/ssri/blob/v6.0.2/CHANGELOG.md)
-        - [Commits](https://github.com/npm/ssri/compare/v6.0.1...v6.0.2)
+    - subject: Support app uuids and release version on target state
+      hash: 89c5daddd733bfa6cc6edbb3a1dfa1dfff026f42
+      body: >
+        We store the uuid and releaseVersion on the individual docker components
+        so that when
+
+        building a current state, we can match them with the target state.
+
+
+        This only accepts uuids from the target state but appId and serviceId
+        still
+
+        remain the main method for comparing current and target state
       footer:
-        Change-type: patch
-        change-type: patch
-        Signed-off-by: 'dependabot[bot] <support@github.com>'
-        signed-off-by: 'dependabot[bot] <support@github.com>'
-      author: 'dependabot[bot]'
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
       nested: []
-  version: 12.5.12
-  date: 2021-04-20T22:52:22.531Z
+  version: 12.6.0
+  date: 2021-04-25T23:52:51.000Z
 - commits:
     - subject: Refactor extra_uEnv to not match with intel nuc
       hash: e6eda0fca7b280aa5453972a26c36ab6895c227a

@@ -1,8 +1,5 @@
-import ChaiConfig = require('./lib/chai-config');
-
-const { expect } = ChaiConfig;
-
-import constants = require('../src/lib/constants');
+import { expect } from 'chai';
+import * as constants from '../src/lib/constants';
 
 describe('constants', function () {
 	it('has the correct configJsonPathOnHost', () =>

@@ -2,12 +2,12 @@ import { stripIndent } from 'common-tags';
 import { fs } from 'mz';
 import { Server } from 'net';
 import { SinonSpy, SinonStub, spy, stub } from 'sinon';
+import { expect } from 'chai';
 
 import prepare = require('./lib/prepare');
 import * as config from '../src/config';
 import * as deviceState from '../src/device-state';
 import Log from '../src/lib/supervisor-console';
-import chai = require('./lib/chai-config');
 import balenaAPI = require('./lib/mocked-balena-api');
 import { schema } from '../src/config/schema';
 import ConfigJsonConfigBackend from '../src/config/configJson';
@@ -15,13 +15,11 @@ import * as TargetState from '../src/device-state/target-state';
 import { DeviceStatus } from '../src/types/state';
 import * as CurrentState from '../src/device-state/current-state';
 import * as ApiHelper from '../src/lib/api-helper';
+import * as eventTracker from '../src/event-tracker';
 
 import { TypedError } from 'typed-error';
 import { DeviceNotFoundError } from '../src/lib/errors';
 
-import { eventTrackSpy } from './lib/mocked-event-tracker';
-
-const { expect } = chai;
 let ApiBinder: typeof import('../src/api-binder');
 
 class ExpectedError extends TypedError {}
@@ -83,8 +81,10 @@ describe('ApiBinder', () => {
 	// We do not support older OS versions anymore, so we only test this case
 	describe('on an OS with deviceApiKey support', () => {
 		const components: Dictionary<any> = {};
+		let eventTrackSpy: SinonSpy;
 
 		before(async () => {
+			eventTrackSpy = spy(eventTracker, 'track');
 			await initModels(components, '/config-apibinder.json');
 		});
 

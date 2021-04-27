@@ -109,9 +109,11 @@ export const realRuleAdaptor = iptables.getDefaultRuleAdaptor();
 const fakeRuleAdaptorManager = new FakeRuleAdaptor();
 const fakeRuleAdaptor = fakeRuleAdaptorManager.getRuleAdaptor();
 
-// @ts-expect-error Assigning to a RO property
-iptables.getDefaultRuleAdaptor = () => {
-	return fakeRuleAdaptor;
+export const overrideIptablesRuleAdapter = function () {
+	// @ts-expect-error Assigning to a RO property
+	iptables.getDefaultRuleAdaptor = () => {
+		return fakeRuleAdaptor;
+	};
 };
 
 export interface MockedState {

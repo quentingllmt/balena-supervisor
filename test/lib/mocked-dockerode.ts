@@ -56,16 +56,17 @@ for (const fn of Object.getOwnPropertyNames(dockerode.prototype)) {
 	}
 }
 
-// default overrides needed to startup...
-registerOverride(
-	'getEvents',
-	async () =>
-		new Stream.Readable({
-			read: () => {
-				return _.noop();
-			},
-		}),
-);
+export const overrideEvents = function () {
+	registerOverride(
+		'getEvents',
+		async () =>
+			new Stream.Readable({
+				read: () => {
+					return _.noop();
+				},
+			}),
+	);
+};
 
 /**
  * Used to add or modifying functions on the mocked dockerode

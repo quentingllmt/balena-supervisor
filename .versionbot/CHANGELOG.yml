@@ -1,4 +1,19 @@
 - commits:
+    - subject: Patch restart to not remove & recreate containers
+      hash: 8574421bda2ae18487593540ef6057048242d5b9
+      body: ''
+      footer:
+        Closes: '#1116'
+        closes: '#1116'
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Christina Wang <christina@balena.io>
+        signed-off-by: Christina Wang <christina@balena.io>
+      author: Christina Wang
+      nested: []
+  version: 12.6.2
+  date: 2021-04-28T15:40:37.216Z
+- commits:
     - subject: 'Remove mz, mkdirp, body-parser dependencies'
       hash: 4a2ac557ef11d334154bafa0cab4e7272cbed749
       body: |

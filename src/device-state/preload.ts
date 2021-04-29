@@ -63,6 +63,22 @@ export async function loadTargetFromFile(
 
 			for (const serviceId of serviceIds) {
 				const service = app.services[serviceId];
+
+				const store = service.labels['io.balena.images.store'];
+				if (store && store !== 'data') {
+					// for now do not mark images outside the data engine store
+					// as supervised, since the supervisor only has support for a single
+					// engine
+					continue;
+				}
+
+				const cls = service.labels['io.balena.images.class'];
+				if (cls && cls !== 'service') {
+					// for now ignore also all non-service images, these
+					// will be added on another commit
+					continue;
+				}
+
 				const svc = {
 					imageName: service.image,
 					serviceName: service.serviceName,

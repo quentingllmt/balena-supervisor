@@ -24,7 +24,7 @@ export async function getSupervisorContainer(
 ): Promise<Docker.ContainerInfo> {
 	// First get the supervisor container id
 	const containers = await docker.listContainers({
-		filters: { name: ['balena_supervisor'] },
+		filters: { name: ['balena_supervisor', 'resin_supervisor'] },
 		all: !requireRunning,
 	});
 
@@ -158,11 +158,19 @@ async function runSshCommand(address: string, command: string) {
 }
 
 export function stopSupervisor(address: string) {
-	return runSshCommand(address, 'systemctl stop balena-supervisor');
+	try {
+		return runSshCommand(address, 'systemctl stop balena-supervisor');
+	} catch (e) {
+		return runSshCommand(address, 'systemctl stop resin-supervisor');
+	}
 }
 
 export function startSupervisor(address: string) {
-	return runSshCommand(address, 'systemctl start balena-supervisor');
+	try {
+		return runSshCommand(address, 'systemctl start balena-supervisor');
+	} catch (e) {
+		return runSshCommand(address, 'systemctl start resin-supervisor');
+	}
 }
 
 export async function replaceSupervisorImage(

@@ -1,4 +1,33 @@
 - commits:
+    - subject: Support app uuids and release version on target state
+      hash: 84789b29704d426192f597838dd87b641d77e3dd
+      body: >
+        We store the uuid and releaseVersion on the individual docker components
+        so that when
+
+        building a current state, we can match them with the target state.
+
+
+        This only accepts uuids from the target state but appId and serviceId
+        still
+
+        remain the main method for comparing current and target state
+
+
+        This is a breaking change that requires a new state endpoint version
+
+
+        See https://github.com/balena-io/open-balena-api/pull/504
+      footer:
+        Change-type: major
+        change-type: major
+        Depends-on: '#1676'
+        depends-on: '#1676'
+      author: Cameron Diver
+      nested: []
+  version: 13.0.0
+  date: 2021-04-30T20:34:57.805Z
+- commits:
     - subject: Remove version tag from livepush generated image
       hash: 9c1d10dc318bb7c207608ed197c5713960642af3
       body: >

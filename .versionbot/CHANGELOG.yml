@@ -1,4 +1,37 @@
 - commits:
+    - subject: Backwards compatility changes for old resin namespaces
+      hash: b42b6f9e7ec1c29c83e2a07bd7f8549b7df7374d
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: Change container name to balena_supervisor
+      hash: e00ef24a7b586f0e2a40914548b030d759a5dac1
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: Rename resin-supervisor to balena-supervisor
+      hash: dbd606000744423fdcb473b9ab046d77659560bc
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 12.7.0
+  date: 2021-04-30T20:02:58.598Z
+- commits:
     - subject: 'Remove mz, mkdirp, body-parser dependencies'
       hash: 4a2ac557ef11d334154bafa0cab4e7272cbed749
       body: |

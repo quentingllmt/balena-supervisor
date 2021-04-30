@@ -1,4 +1,19 @@
 - commits:
+    - subject: >-
+        Add tilde as a shortcut for project root, allowing shorter imports.
+        Imports may be made with file paths like so: "~/src/lib/constants.ts".
+      hash: 43a57b629233210b9d603a1e9e5fd1481516519f
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Christina Wang <christina@balena.io>
+        signed-off-by: Christina Wang <christina@balena.io>
+      author: Christina Wang
+      nested: []
+  version: 12.6.2
+  date: 2021-04-30T19:52:22.372Z
+- commits:
     - subject: 'Remove mz, mkdirp, body-parser dependencies'
       hash: 4a2ac557ef11d334154bafa0cab4e7272cbed749
       body: |
